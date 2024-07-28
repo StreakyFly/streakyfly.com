@@ -1,8 +1,9 @@
-import type { Metadata } from "next";
-import { Inter } from "next/font/google";
-import "./globals.css";
+import "@/styles/globals.css";
 
-const inter = Inter({ subsets: ["latin"] });
+import type { Metadata } from "next";
+import { DM_Sans } from "next/font/google";
+
+const dmSans = DM_Sans({ subsets: ["latin"] });
 
 export const metadata: Metadata = {
   title: "StreakyFly",
@@ -16,12 +17,7 @@ export default function RootLayout({
 }>) {
   return (
       <html lang="en">
-      <body className={inter.className}>{children}
-          {/* Temporary footer - create a footer component */}
-          <footer className="flex justify-center items-center h-12 bg-black text-white">
-              <p>&copy; 2024 StreakyFly. All rights reserved.</p>
-          </footer>
-      </body>
+      <body className={dmSans.className}>{children}</body>
       </html>
   );
 }

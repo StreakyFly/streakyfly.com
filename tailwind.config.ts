@@ -8,13 +8,20 @@ const config: Config = {
   ],
   theme: {
     extend: {
+      // Can I remove this? I don't think I need it.
       backgroundImage: {
         "gradient-radial": "radial-gradient(var(--tw-gradient-stops))",
-        "gradient-conic":
-          "conic-gradient(from 180deg at 50% 50%, var(--tw-gradient-stops))",
+        "gradient-conic": "conic-gradient(from 180deg at 50% 50%, var(--tw-gradient-stops))",
+      },
+      colors: {
+        dark: '#181818',
+        green: {
+          light: '#ADD3B1',
+        }
       },
     },
   },
   plugins: [],
 };
+
 export default config;
