@@ -1,0 +1,17 @@
+.blob {
+    position: absolute;
+    border-radius: 50%;
+    /*filter: blur(100px);*/
+    animation: moveBlob ease-in-out infinite;
+    z-index: -1;
+    will-change: transform;
+}
+
+@keyframes moveBlob {
+    0%, 100% {
+        transform: translate(0, 0);
+    }
+    50% {
+        transform: translate(5vw, 5vw);
+    }
+}
