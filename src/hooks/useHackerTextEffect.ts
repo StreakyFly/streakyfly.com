@@ -19,11 +19,16 @@ const getRandomCharacter = () => {
 export default function useHackerTextEffect(selector: string) {
     useEffect(() => {
         const elements = document.querySelectorAll<HTMLElement>(selector);
+        const isInProgressMap = new Map<HTMLElement, NodeJS.Timeout>();
 
         elements.forEach(element => {
             element.dataset.value = element.innerText;
 
             element.onmouseover = (event: MouseEvent) => {
+                if (isInProgressMap.get(element)) {
+                    clearInterval(isInProgressMap.get(element)!);
+                }
+
                 const target = event.target as HTMLElement;
                 let iteration = 0;
                 const maxIterations = 3;
@@ -32,8 +37,15 @@ export default function useHackerTextEffect(selector: string) {
                     if (iteration < maxIterations) {
                         // target.innerText = getRandomLetter(target.dataset.value! === target.dataset.value!.toUpperCase());
                         target.innerText = getRandomCharacter();
+                        // target.style.opacity = Math.random() * 0.4 + 0.6 + '';  // 0.6 to 1
+                        // target.style.color = Math.random() > 0.5 ? '#089741' : '#088893';
+                        target.style.scale = '1.08';
+
                     } else {
                         target.innerText = target.dataset.value!;
+                        // target.style.opacity = '1';
+                        // target.style.color = 'white';
+                        target.style.scale = '1'
                     }
                     iteration++;
                 };
@@ -44,7 +56,8 @@ export default function useHackerTextEffect(selector: string) {
                     if (iteration > maxIterations) {
                         clearInterval(intervalId);
                     }
-                }, 120);
+                }, 100);
+                isInProgressMap.set(element, intervalId);
             };
         });
     }, [selector]);
