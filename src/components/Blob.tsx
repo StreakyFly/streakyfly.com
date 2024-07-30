@@ -2,28 +2,35 @@ import React from 'react';
 import styles from './Blob.module.css';
 
 interface BlobProps {
-    size: number;
-    color: string;
+    size: string;
+    color1: string;
+    color2: string;
     top: string;
     left: string;
+    animationId: string;
     animationDuration: string;
 }
 
-const Blob: React.FC<BlobProps> = ({ size, color, top, left, animationDuration }) => {
+const Blob: React.FC<BlobProps> = ({
+               size, color1, color2, top, left, animationId, animationDuration
+}) => {
     return (
         <div
-            className={styles.blob}
+            className={`absolute rounded-full -z-10 will-change-transform ${getBlobStyle(animationId)}`}
             style={{
                 width: size,
                 height: size,
-                background: `radial-gradient(circle, ${color} 0%, transparent 70%)`,
+                background: `linear-gradient(to right, ${color1} 60%, ${color2})`,
                 top: top,
                 left: left,
                 animationDuration: animationDuration,
-                willChange: 'transform',
             }}
         ></div>
     );
 };
 
 export default Blob;
+
+function getBlobStyle(id: string) {
+    return styles[`blob${id}`];
+}
