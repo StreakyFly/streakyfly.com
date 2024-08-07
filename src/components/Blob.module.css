@@ -1,17 +1,22 @@
-.blob1 {
+/* TODO: There must be a better way to do this! */
+
+.blob {
     position: absolute;
     border-radius: 50%;
-    animation: moveBlob1 infinite;
-    z-index: -10;
+    z-index: -2;
     will-change: transform;
 }
 
+.blob1 {
+    animation: moveBlob1 infinite;
+}
+
 .blob2 {
-    position: absolute;
-    border-radius: 50%;
     animation: moveBlob2 infinite;
-    z-index: -10;
-    will-change: transform;
+}
+
+.blob3 {
+    animation: moveBlob3 infinite;
 }
 
 @keyframes moveBlob1 {
@@ -28,4 +33,8 @@
     50% {transform: translate(-18vw, 2vh) rotate(-220deg) scale(1.2, 1);}
     75% {transform: translate(-13vw, 3vh) rotate(-276deg) scale(1, 1.4);}
     to {transform: translate(0vw, 0vh) rotate(-360deg);}
+}
+
+@keyframes moveBlob3 {
+/* TODO: TBD */
 }
