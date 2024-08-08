@@ -2,6 +2,7 @@ import React from 'react';
 import Image from 'next/image';
 
 export default function SocialMediaIcons() {
+    // TODO: uhh make mobile friendly - somehow. Maybe make it a single button that expands on hover? :thinking:
     return (
         <div className="fixed z-10 bottom-8 right-8 flex flex-col space-y-8">
             <a href="https://x.com/StreakyFly" target="_blank" rel="noopener noreferrer">

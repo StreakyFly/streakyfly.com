@@ -37,42 +37,50 @@ export default function Navbar() {
         };
 
         const isMobile = window.matchMedia('(hover: none)').matches;
-        if (isMobile) {
-            // if not isMenuOpen, the button shouldn't have hover effect on mobile devices
-            if (!isMenuOpen && buttonRef.current) {
-                buttonRef.current?.classList.remove('hover:bg-white/15');
-            } else {
-                buttonRef.current?.classList.add('hover:bg-white/15');
-            }
-        } else {
-            // if isMenuOpen, the button should have hover effect, even if not hovered
+        if (!isMobile) {
+            // if user uses mouse (not touch) and isMenuOpen, the button should have hover effect, even if not hovered
             if (isMenuOpen && buttonRef.current) {
                 buttonRef.current?.classList.add('bg-white/15');
-            } else {
+            } else if (!isMenuOpen && buttonRef.current) {
                 buttonRef.current?.classList.remove('bg-white/15');
+            }
+        }
+
+        const handleTouchStart = (event: TouchEvent) => {
+            // if hamburger menu is opened and the user touches the hamburger button, remove hover effect
+            if (isMenuOpen && buttonRef.current) {
+                buttonRef.current?.classList.remove('hover:bg-white/15');
+            // if hamburger menu is closed and the user touches (and doesn't let go immediately) the hamburger button, add hover effect
+            } else if (!isMenuOpen && buttonRef.current && buttonRef.current.contains(event.target as Node)) {
+                buttonRef.current?.classList.add('hover:bg-white/15');
             }
         }
 
         window.addEventListener('scroll', handleScroll);
         window.addEventListener('click', handleClickOutside);
+        if (isMobile) window.addEventListener('touchstart', handleTouchStart);
 
         return () => {
             window.removeEventListener('scroll', handleScroll);
             window.removeEventListener('click', handleClickOutside);
+            if (isMobile) window.removeEventListener('touchstart', handleTouchStart);
         };
     }, [isMenuOpen]);
 
-    // TODO: move navbar higher & closer to borders on mobile devices
     return (
-        <nav className="fixed z-10 text-3xl top-9 w-full flex justify-between items-center text-white">
-            <div className={`flex ml-10 space-x-4 items-center transition-transform duration-500 ${
+        <nav className="fixed z-10 text-3xl top-4 md:top-9 w-full flex justify-between items-center text-white">
+            <div className={`flex ml-3 md:ml-10 space-x-4 items-center transition-transform duration-500 ${
                 showLogo ? 'translate-y-0' : '-translate-y-20'
             }`}
             >
                 <Link href="/">
-                    <div className="flex items-center space-x-4">
-                        <Image src="/streakyfly-logo.png" alt="logo" width={36} height={36} className="logo-round" />
+                    <div className="hidden md:flex items-center space-x-4">
+                        <Image src="/streakyfly-logo.png" alt="logo" width={36} height={36} className="rounded"/>
                         <span className="font-bold">StreakyFly</span>
+                    </div>
+                    <div className="flex md:hidden items-center space-x-4 backdrop-blur p-1.5 pr-2.5 rounded-md border border-white/10 hover:bg-white/15 transition duration-200 ease-in-out">
+                        <Image src="/streakyfly-logo.png" alt="logo" width={32} height={32} className="rounded"/>
+                        <span className="text-2xl font-bold" style={{ fontSize: '1.5rem', lineHeight: '1.7rem' }}>StreakyFly</span>
                     </div>
                 </Link>
             </div>
@@ -84,10 +92,10 @@ export default function Navbar() {
             </ul>
 
             {/* Hamburger menu visible on screens narrower than md breakpoint (768px) */}
-            <div className="mr-10 md:hidden relative" ref={menuRef}>
+            <div className="relative md:hidden mr-3 md:mr-10" ref={menuRef}>
                 <button
                     ref={buttonRef}
-                    className="flex items-center px-3 py-3 rounded-md border border-white/10 hover:bg-white/15 backdrop-blur transition duration-150 ease-in-out"
+                    className="flex items-center px-3 py-3 rounded-md border border-white/10 hover:bg-white/15 backdrop-blur transition duration-200 ease-in-out"
                     onClick={() => setIsMenuOpen(!isMenuOpen)}
                 >
                     <div className="relative w-6 h-5 flex flex-col justify-between items-center cursor-pointer">

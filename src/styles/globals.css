@@ -32,8 +32,3 @@ body {
     text-wrap: balance;
   }
 }
-
-.logo-round {
-    border-radius: 50%;
-    border: 2px solid white;
-}
