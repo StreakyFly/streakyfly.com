@@ -3,7 +3,7 @@ import Image from 'next/image';
 
 export default function SocialMediaIcons() {
     return (
-        <div className="fixed bottom-8 right-8 flex flex-col space-y-8">
+        <div className="fixed z-10 bottom-8 right-8 flex flex-col space-y-8">
             <a href="https://x.com/StreakyFly" target="_blank" rel="noopener noreferrer">
                 <Image src="/icons/x-icon.svg" alt="X" width={0} height={0}
                        style={{ width: '36px', height: 'auto' }} className="hover:opacity-75"/>
