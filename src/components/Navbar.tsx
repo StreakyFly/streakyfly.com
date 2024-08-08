@@ -99,20 +99,20 @@ export default function Navbar() {
 
                 {/* Dropdown menu */}
                 <div
-                    className={`absolute right-0 top-full mt-3 py-3 rounded-lg border border-white/10 bg-white/15 backdrop-blur text-white transition-all duration-300 ease-in-out transform ${
+                    className={`absolute right-0 top-full mt-3 py-3 rounded-lg border border-white/10 bg-white/15 backdrop-blur text-white transition-all duration-200 ease-in-out transform ${
                         isMenuOpen ? 'opacity-100 scale-100' : 'opacity-0 scale-75 pointer-events-none'
                     }`}
                     style={{ transformOrigin: 'top right' }}
                 >
                     <ul className="space-y-6">
                         <li className="relative">
-                            <Link href="/projects" className="block text-lg px-5 hover:text-green-light transition duration-200">
+                            <Link href="/projects" className="block text-lg px-5 hover:text-green-light transition duration-150">
                                 Projects
                             </Link>
                             <span className="absolute -bottom-3 left-3 right-3 border-b border-white/20"></span>
                         </li>
                         <li>
-                            <Link href="/wisdom" className="block text-lg px-5 hover:text-green-light transition duration-200">
+                            <Link href="/wisdom" className="block text-lg px-5 hover:text-green-light transition duration-150">
                                 Wisdom
                             </Link>
                         </li>
