@@ -14,17 +14,22 @@ function isUserScrolledDownEnough(): boolean {
     return false;
 }
 
+function checkTouchDevice(): boolean {
+    return ('ontouchstart' in window) || (navigator.maxTouchPoints > 0);
+    // return window.matchMedia('(hover: none)').matches;
+}
+
 export default function Navbar() {
     const [showLogo, setShowLogo] = useState(false);
     const [isMenuOpen, setIsMenuOpen] = useState(false);
     const menuRef = useRef<HTMLDivElement>(null);
     const buttonRef = useRef<HTMLButtonElement>(null);
+    const logoRef = useRef<HTMLDivElement>(null);
+    const isTouchDevice = checkTouchDevice();
 
+    // Effect to handle hamburger menu
     useEffect(() => {
-        setShowLogo(isUserScrolledDownEnough());
-
         const handleScroll = () => {
-            setShowLogo(isUserScrolledDownEnough());
             if (isMenuOpen) {
                 setIsMenuOpen(false);
             }
@@ -36,8 +41,7 @@ export default function Navbar() {
             }
         };
 
-        const isMobile = window.matchMedia('(hover: none)').matches;
-        if (!isMobile) {
+        if (!isTouchDevice) {
             // if user uses mouse (not touch) and isMenuOpen, the button should have hover effect, even if not hovered
             if (isMenuOpen && buttonRef.current) {
                 buttonRef.current?.classList.add('bg-white/15');
@@ -54,18 +58,47 @@ export default function Navbar() {
             } else if (!isMenuOpen && buttonRef.current && buttonRef.current.contains(event.target as Node)) {
                 buttonRef.current?.classList.add('hover:bg-white/15');
             }
-        }
+        };
 
         window.addEventListener('scroll', handleScroll);
         window.addEventListener('click', handleClickOutside);
-        if (isMobile) window.addEventListener('touchstart', handleTouchStart);
+        if (isTouchDevice) window.addEventListener('touchstart', handleTouchStart);
 
         return () => {
             window.removeEventListener('scroll', handleScroll);
             window.removeEventListener('click', handleClickOutside);
-            if (isMobile) window.removeEventListener('touchstart', handleTouchStart);
+            if (isTouchDevice) window.removeEventListener('touchstart', handleTouchStart);
         };
     }, [isMenuOpen]);
+
+    // Effect to handle logo/home button
+    useEffect(() => {
+        setShowLogo(isUserScrolledDownEnough());
+
+        const handleScroll = () => {
+            setShowLogo(isUserScrolledDownEnough());
+        };
+
+        if (isTouchDevice) {
+            if (showLogo && logoRef.current) {
+                logoRef.current?.classList.remove('hover:bg-white/15');
+            }
+        }
+
+        const handleTouchStart = (event: TouchEvent) => {
+            if (showLogo && logoRef.current && logoRef.current.contains(event.target as Node)) {
+                logoRef.current?.classList.add('hover:bg-white/15');
+            }
+        };
+
+        window.addEventListener('scroll', handleScroll);
+        if (isTouchDevice) window.addEventListener('touchstart', handleTouchStart);
+
+        return () => {
+            window.removeEventListener('scroll', handleScroll);
+            if (isTouchDevice) window.removeEventListener('touchstart', handleTouchStart);
+        };
+    }, [showLogo]);
 
     return (
         <nav className="fixed z-10 text-3xl top-4 md:top-9 w-full flex justify-between items-center text-white">
@@ -74,11 +107,15 @@ export default function Navbar() {
             }`}
             >
                 <Link href="/">
+                    {/* big screens */}
                     <div className="hidden md:flex items-center space-x-4">
                         <Image src="/streakyfly-logo.png" alt="logo" width={36} height={36} className="rounded"/>
                         <span className="font-bold">StreakyFly</span>
                     </div>
-                    <div className="flex md:hidden items-center space-x-4 backdrop-blur p-1.5 pr-2.5 rounded-md border border-white/10 hover:bg-white/15 transition duration-200 ease-in-out">
+                    {/* small screens */}
+                    <div
+                        ref={logoRef}
+                        className="flex md:hidden items-center space-x-4 backdrop-blur p-1.5 pr-2.5 rounded-md border border-white/10 hover:bg-white/15 transition duration-200 ease-in-out">
                         <Image src="/streakyfly-logo.png" alt="logo" width={32} height={32} className="rounded"/>
                         <span className="text-2xl font-bold" style={{ fontSize: '1.5rem', lineHeight: '1.7rem' }}>StreakyFly</span>
                     </div>
