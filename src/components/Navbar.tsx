@@ -1,6 +1,6 @@
 'use client';
 
-import { useState, useEffect, useRef } from 'react';
+import { useEffect, useRef, useState } from 'react';
 import Link from 'next/link';
 import Image from 'next/image';
 
@@ -15,7 +15,7 @@ function isUserScrolledDownEnough(): boolean {
 }
 
 function checkTouchDevice(): boolean {
-    return ('ontouchstart' in window) || (navigator.maxTouchPoints > 0);
+    return 'ontouchstart' in window || navigator.maxTouchPoints > 0;
     // return window.matchMedia('(hover: none)').matches;
 }
 
@@ -25,10 +25,9 @@ export default function Navbar() {
     const menuRef = useRef<HTMLDivElement>(null);
     const buttonRef = useRef<HTMLButtonElement>(null);
     const logoRef = useRef<HTMLDivElement>(null);
-    const isTouchDevice = checkTouchDevice();
 
-    // Effect to handle hamburger menu
     useEffect(() => {
+        // Effect to handle hamburger menu
         const handleScroll = () => {
             if (isMenuOpen) {
                 setIsMenuOpen(false);
@@ -41,12 +40,15 @@ export default function Navbar() {
             }
         };
 
+        const isTouchDevice = checkTouchDevice();
         if (!isTouchDevice) {
             // if user uses mouse (not touch) and isMenuOpen, the button should have hover effect, even if not hovered
             if (isMenuOpen && buttonRef.current) {
                 buttonRef.current?.classList.add('bg-white/15');
+                buttonRef.current?.classList.remove('bg-white/5');
             } else if (!isMenuOpen && buttonRef.current) {
                 buttonRef.current?.classList.remove('bg-white/15');
+                buttonRef.current?.classList.add('bg-white/5');
             }
         }
 
@@ -71,14 +73,16 @@ export default function Navbar() {
         };
     }, [isMenuOpen]);
 
-    // Effect to handle logo/home button
+    // TODO: if user is on home page, animate quick "scrolling" to top when clicking on logo
     useEffect(() => {
+        // Effect to handle logo/home button
         setShowLogo(isUserScrolledDownEnough());
 
         const handleScroll = () => {
             setShowLogo(isUserScrolledDownEnough());
         };
 
+        const isTouchDevice = checkTouchDevice();
         if (isTouchDevice) {
             if (showLogo && logoRef.current) {
                 logoRef.current?.classList.remove('hover:bg-white/15');
@@ -86,7 +90,7 @@ export default function Navbar() {
         }
 
         const handleTouchStart = (event: TouchEvent) => {
-            if (showLogo && logoRef.current && logoRef.current.contains(event.target as Node)) {
+            if (showLogo && logoRef.current && !logoRef.current.contains(event.target as Node)) {
                 logoRef.current?.classList.add('hover:bg-white/15');
             }
         };
@@ -101,10 +105,11 @@ export default function Navbar() {
     }, [showLogo]);
 
     return (
-        <nav className="fixed z-10 text-3xl top-4 md:top-9 w-full flex justify-between items-center text-white">
-            <div className={`flex ml-3 md:ml-10 space-x-4 items-center transition-transform duration-500 ${
-                showLogo ? 'translate-y-0' : '-translate-y-20'
-            }`}
+        <nav className="fixed z-10 top-4 md:top-9 flex w-full items-center justify-between text-3xl text-white">
+            <div
+                className={`ml-4 md:ml-10 flex items-center space-x-4 transition-transform duration-500 ${
+                    showLogo ? 'translate-y-0' : '-translate-y-20'
+                }`}
             >
                 <Link href="/">
                     {/* big screens */}
@@ -115,9 +120,11 @@ export default function Navbar() {
                     {/* small screens */}
                     <div
                         ref={logoRef}
-                        className="flex md:hidden items-center space-x-4 backdrop-blur p-1.5 pr-2.5 rounded-md border border-white/10 hover:bg-white/15 transition duration-200 ease-in-out">
+                        className="flex md:hidden items-center space-x-4 rounded-md border border-white/10 bg-white/5 p-1.5 pr-2.5 backdrop-blur transition duration-200 ease-in-out hover:bg-white/15"
+                    >
                         <Image src="/streakyfly-logo.png" alt="logo" width={32} height={32} className="rounded"/>
                         <span className="text-2xl font-bold" style={{ fontSize: '1.5rem', lineHeight: '1.7rem' }}>StreakyFly</span>
+
                     </div>
                 </Link>
             </div>
@@ -129,37 +136,31 @@ export default function Navbar() {
             </ul>
 
             {/* Hamburger menu visible on screens narrower than md breakpoint (768px) */}
-            <div className="relative md:hidden mr-3 md:mr-10" ref={menuRef}>
+            <div className="relative md:hidden mr-4 md:mr-10" ref={menuRef}>
                 <button
                     ref={buttonRef}
-                    className="flex items-center px-3 py-3 rounded-md border border-white/10 hover:bg-white/15 backdrop-blur transition duration-200 ease-in-out"
+                    className="flex items-center rounded-md border border-white/10 bg-white/5 px-3 py-3 backdrop-blur transition duration-200 ease-in-out hover:bg-white/15"
                     onClick={() => setIsMenuOpen(!isMenuOpen)}
                 >
-                    <div className="relative w-6 h-5 flex flex-col justify-between items-center cursor-pointer">
-                        <span className="block w-full h-1 bg-white rounded"></span>
-                        <span className="block w-full h-1 bg-white rounded"></span>
-                        <span className="block w-full h-1 bg-white rounded"></span>
+                    <div className="relative flex h-5 w-6 cursor-pointer flex-col items-center justify-between">
+                        <span className="block h-1 w-full rounded bg-white"></span>
+                        <span className="block h-1 w-full rounded bg-white"></span>
+                        <span className="block h-1 w-full rounded bg-white"></span>
                     </div>
                 </button>
 
                 {/* Dropdown menu */}
                 <div
-                    className={`absolute right-0 top-full mt-3 py-3 rounded-lg border border-white/10 bg-white/15 backdrop-blur text-white transition-all duration-200 ease-in-out transform ${
-                        isMenuOpen ? 'opacity-100 scale-100' : 'opacity-0 scale-75 pointer-events-none'
-                    }`}
-                    style={{ transformOrigin: 'top right' }}
+                    className={`absolute right-0 top-full mt-3 py-3 origin-top-right transform rounded-lg border border-white/10 bg-white/15 text-white backdrop-blur transition-all duration-200 ease-in-out ${
+                        isMenuOpen ? 'scale-100 opacity-100' : 'pointer-events-none scale-75 opacity-0'}`}
                 >
                     <ul className="space-y-6">
                         <li className="relative">
-                            <Link href="/projects" className="block text-lg px-5 hover:text-green-light transition duration-150">
-                                Projects
-                            </Link>
+                            <Link href="/projects" className="block px-5 text-lg transition duration-150 hover:text-green-light">Projects</Link>
                             <span className="absolute -bottom-3 left-3 right-3 border-b border-white/20"></span>
                         </li>
                         <li>
-                            <Link href="/wisdom" className="block text-lg px-5 hover:text-green-light transition duration-150">
-                                Wisdom
-                            </Link>
+                            <Link href="/wisdom" className="block px-5 text-lg transition duration-150 hover:text-green-light">Wisdom</Link>
                         </li>
                     </ul>
                 </div>
