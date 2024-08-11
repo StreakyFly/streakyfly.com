@@ -73,7 +73,9 @@ export default function Navbar() {
         };
     }, [isMenuOpen]);
 
-    // TODO: if user is on home page, animate quick "scrolling" to top when clicking on logo
+    // TODO: If user is on home page, animate quick "scrolling" to top when clicking on logo.
+    //  Or maybe not just on home page but any page? Somehow transition between the current page and the home page,
+    //  so it looks like you were on home page even if you weren't? :flushed:
     useEffect(() => {
         // Effect to handle logo/home button
         setShowLogo(isUserScrolledDownEnough());
@@ -90,7 +92,7 @@ export default function Navbar() {
         }
 
         const handleTouchStart = (event: TouchEvent) => {
-            if (showLogo && logoRef.current && !logoRef.current.contains(event.target as Node)) {
+            if (showLogo && logoRef.current && logoRef.current.contains(event.target as Node)) {
                 logoRef.current?.classList.add('hover:bg-white/15');
             }
         };
