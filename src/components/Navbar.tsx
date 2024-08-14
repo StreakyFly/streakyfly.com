@@ -1,6 +1,6 @@
 'use client';
 
-import { useEffect, useRef, useState } from 'react';
+import React, { useEffect, useRef, useState } from 'react';
 import Link from 'next/link';
 import Image from 'next/image';
 
@@ -73,9 +73,10 @@ export default function Navbar() {
         };
     }, [isMenuOpen]);
 
-    // TODO: If user is on home page, animate quick "scrolling" to top when clicking on logo.
-    //  Or maybe not just on home page but any page? Somehow transition between the current page and the home page,
-    //  so it looks like you were on home page even if you weren't? :flushed:
+    // If user is on home page, quickly scroll to top when clicking on logo.
+    // TODO: Do a visually similar thing on other pages as well?
+    //  Somehow transition between the current page and the home page, so it looks like you were on home page even if
+    //  you weren't? :flushed:
     useEffect(() => {
         // Effect to handle logo/home button
         setShowLogo(isUserScrolledDownEnough());
@@ -106,14 +107,19 @@ export default function Navbar() {
         };
     }, [showLogo]);
 
+    const handleLogoClick = (event: React.MouseEvent<HTMLAnchorElement, MouseEvent>) => {
+        event.preventDefault();
+        window.scrollTo({ top: 0, behavior: 'smooth' });
+    }
+
     return (
         <nav className="fixed z-10 top-4 md:top-9 flex w-full items-center justify-between text-3xl text-white">
-            <div
-                className={`ml-4 md:ml-10 flex items-center space-x-4 transition-transform duration-500 ${
+            {/* Logo/home */}
+            <div className={`ml-4 md:ml-10 flex items-center space-x-4 transition-transform duration-500 ${
                     showLogo ? 'translate-y-0' : '-translate-y-20'
                 }`}
             >
-                <Link href="/">
+                <Link href="/" onClick={handleLogoClick}>
                     {/* big screens */}
                     <div className="hidden md:flex items-center space-x-4">
                         <Image src="/streakyfly-logo.png" alt="logo" width={36} height={36} className="rounded"/>
