@@ -13,7 +13,7 @@ export default function AboutMe() {
             <div style={{ fontSize: 'clamp(1.2rem, 1.5vw, 1.5rem)' }}
                  className="max-w-2xl text-justify space-y-6 text-2xl leading-normal font-light px-8 md:px-0">
                 <p>
-                    Hey! I&apos;m Miha, a 22-year-old computer science student and software developer from Slovenia. I love transforming wild ideas into real projects, whether it’s game design, machine learning, or automation—essentially anything that combines fun with tech.
+                    Hey! I&apos;m Miha, a 22-year-old computer science student and software developer from Slovenia. I love transforming wild ideas into real projects, whether it&apos;s game design, machine learning, or automation—essentially anything that combines fun with tech.
                 </p>
                 <p>
                     I share my epic tech adventures on YouTube, where the upload schedule is a bold experiment in unpredictability. It turns out balancing grand projects with a regular posting routine is harder than debugging code during a live demo. But hang tight—each delay is a reminder of my commitment to overcomplicating things!
