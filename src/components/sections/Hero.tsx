@@ -4,7 +4,7 @@ import AnimatedTitle from "@/components/AnimatedTitle";
 
 export default function Hero() {
     return (
-        <section id="hero" className="relative flex flex-col items-start justify-center h-screen text-white">
+        <section id="hero" className="relative h-screen overflow-clip flex flex-col items-start justify-center text-white">
           {/* TODO: Blob position should be relative to the title, not the view width/height! */}
           <Blob size="24vw" color1="rgba(0, 217, 255, 0.37)" color2="rgba(0, 160, 255, 0.4)" top="20vh" left="3vw" animationId="1" animationDuration="18s" />
           <Blob size="26vw" color1="rgba(0, 255, 98, 0.37)" color2="rgba(0, 255, 62, 0.4)" top="21.5vh" left="22vw" animationId="2" animationDuration="18s" />
