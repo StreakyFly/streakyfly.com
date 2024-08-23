@@ -3,6 +3,7 @@ import SocialMediaIcons from "@/components/SocialMediaIcons";
 import BlurOverlay from "@/components/BlurOverlay";
 import Hero from '@/components/sections/Hero';
 import AboutMe from '@/components/sections/AboutMe';
+import CallToAction from '@/components/sections/CallToAction';
 
 export default function Home() {
   return (
@@ -10,10 +11,10 @@ export default function Home() {
           <BlurOverlay />
           <Navbar />
           <SocialMediaIcons />
+          {/* Add 3D object component here */}
           <Hero/>
           <AboutMe/>
-          {/* Add 3D object component here */}
-          <section id="contact" className="min-h-screen bg-gray-800">Contact/Call-to-action? WIP</section>
+          <CallToAction/>
       </main>
   );
 }
