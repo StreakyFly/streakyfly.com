@@ -1,4 +1,5 @@
 import { projectService } from '@/database/services';
+import { CldImage } from '@/components/CldWrapper';
 
 export const metadata = {
     title: 'Projects',
@@ -8,7 +9,7 @@ export const metadata = {
 export const revalidate = 5; // TODO: Set to 3600 (1 hour) in production?
 
 export default async function Projects() {
-    const projects = await projectService.getProjects('-_id slug title description imageURL createdAt tags');
+    const projects = await projectService.getProjects('-_id slug title description imageID createdAt tags');
 
     if (!projects) {
         return <div>Failed to load projects. Please try again later.</div>;
@@ -22,7 +23,10 @@ export default async function Projects() {
                 {projects.map((project: any) => (
                     <a key={project.slug} href={`/projects/${project.slug}`} className="block no-underline text-black">
                         <div className="project-card border rounded-lg p-4 shadow-lg">
-                            <img src={project.imageURL} alt={project.title} className="w-full h-48 object-cover rounded-md mb-4" />
+                            <div className="image-container w-full h-48 mb-4">
+                                <CldImage src={project.imageID} alt={project.imageID} width="512" height="512" style={{ width: "100%", height: "100%" }} className="object-cover rounded-md w-full h-48 mb-4" />
+                                {/*<img src="https://res.cloudinary.com/streakyfly/image/upload/c_limit,w_640/f_auto/q_auto/cld-sample-2?_a=BAVCr+DW0" alt={project.imageID} className="object-cover rounded-md" />*/}
+                            </div>
                             <h2 className="text-xl font-semibold mb-2">{project.title}</h2>
                             <p className="text-gray-700">{project.description}</p>
                         </div>
