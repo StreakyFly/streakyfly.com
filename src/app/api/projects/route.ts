@@ -6,8 +6,8 @@ import { projectService } from '@/database/services';
 export async function POST(request: Request) {
     const apiKey = request.headers.get('x-api-key');
 
-    if (apiKey !== process.env.API_KEY) {
-        return NextResponse.json({ success: false, message: 'Unauthorized', error: 'Invalid API key' }, { status: 401 });
+    if (apiKey !== process.env.SECRET_KEY) {
+        return NextResponse.json({ success: false, message: 'Unauthorized', error: 'Invalid secret key' }, { status: 401 });
     }
 
     try {
