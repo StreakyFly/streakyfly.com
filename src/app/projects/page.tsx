@@ -6,10 +6,8 @@ export const metadata = {
     description: 'Explore my projects',
 };
 
-export const revalidate = 5; // TODO: Set to 3600 (1 hour) in production?
-
 export default async function Projects() {
-    const projects = await projectService.getProjects('-_id slug title description imageID createdAt tags');
+    const projects = await projectService.getPublicProjects('-_id slug title description imageID createdAt tags');
 
     if (!projects) {
         return <div>Failed to load projects. Please try again later.</div>;

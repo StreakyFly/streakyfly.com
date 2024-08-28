@@ -6,6 +6,11 @@ export async function getProjects(projection: string = '') {
     return Project.find({}, projection);
 }
 
+export async function getPublicProjects(projection: string = '') {
+    await dbConnect();
+    return Project.find({ status: 'public' }, projection);
+}
+
 export async function getProject(slug: string, projection: string = '') {
     await dbConnect();
     return Project.findOne({ slug }, projection);
