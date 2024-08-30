@@ -2,9 +2,15 @@ import { notFound } from 'next/navigation';
 import { projectService } from '@/database/services';
 import { CldImage } from '@/components/CldWrapper';
 
-// if user visits invalid/not pre-rendered project slug, they should see a 404 page -
-// it shouldn't connect to the database and attempt to generate the page for them
-export const dynamicParams = false;
+// If user visits invalid/not pre-rendered path (e.g. \project\i-dont-exist-or-was-just-added-to-db),
+// they should see a 404 - Not Found page -- it should **NOT** connect to the database, attempt to fetch
+// the project data and generate the page for them. Setting dynamicParams to false accomplishes this.
+// However, if we want to revalidatePath() for this route, we need to set dynamicParams to true, or remove it.
+// Because being able to revalidatePath() for this route is more important than saving
+// some database queries, we'll comment out "export const dynamicParams = false" for now.
+// TODO: Find a way to allow revalidation for this route, without connecting to
+//  the database for invalid/new/not-yet-rendered slugs.
+// export const dynamicParams = false;
 
 export async function generateStaticParams() {
     const projects = await projectService.getProjects('slug');

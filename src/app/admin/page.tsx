@@ -1,4 +1,4 @@
-'use client';
+'use client';  // TODO: the entire page shouldn't be client-side rendered, only the necessary parts - or should it be?
 
 import { signOut } from 'next-auth/react';
 

@@ -22,20 +22,20 @@ import mongoose, { Schema, Document, Model } from 'mongoose';
  */
 
 interface IProject extends Document {
-    slug: string;
-    status: string;
     title: string;
     description: string;
     imageID: string;
+    slug: string;
+    status: string;
     tags?: string[];
 }
 
 const ProjectSchema = new Schema<IProject>({
-    slug: { type: String, lowercase: true, required: false, unique: true },
-    status: { type: String, required: true, default: 'draft' },
     title: { type: String, required: true },
     description: { type: String, required: true },
     imageID: { type: String, required: true },
+    slug: { type: String, lowercase: true, required: false, unique: true },
+    status: { type: String, required: true, default: 'draft' },
     tags: { type: [String], required: false },
 },
     { timestamps: true }
