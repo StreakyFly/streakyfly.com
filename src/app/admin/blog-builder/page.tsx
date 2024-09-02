@@ -1,8 +1,7 @@
 'use client';  // TODO: the entire page shouldn't be client-side rendered, only the necessary parts - or should it be?
 
-async function revalidate(path: string) {
-    await fetch(`/api/revalidate?path=${encodeURIComponent(path)}`);
-}
+import { revalidate } from '@/actions/revalidate';
+import { createProject } from '@/actions/projectActions';
 
 export default function BlogBuilder() {
     // TEMPORARY ABSOLUTE GARBAGE BLOG BUILDER, if I can even call it that - but it works (if you know exactly
@@ -27,13 +26,7 @@ export default function BlogBuilder() {
         }
 
         try {
-            const response = await fetch('/api/projects', {
-                method: 'POST',
-                headers: { 'Content-Type': 'application/json' },
-                body: JSON.stringify(jsonData),
-            });
-
-            const result = await response.json();
+            const result = await createProject(jsonData);
 
             if (result.success) {
                 alert('Blog saved successfully!');
@@ -41,14 +34,21 @@ export default function BlogBuilder() {
                 //  -- later check what things changed, did title, desc and imageID change? If not, revalidating
                 //  projects page might not be necessary. Or if project status is private, or stuff like that.
                 // Perhaps even add a button for manual revalidation in the admin panel?
-                await revalidate('/projects');
-                await revalidate(`/projects/${result.data.slug}`);
+                // Or will that overcomplicate things for barely any benefit?
+                try {
+                    await revalidate('/projects');
+                    await revalidate(`/projects/${result.slug}`);
+                } catch (error) {
+                    console.error('Failed to revalidate pages:', error);
+                    alert('Failed to revalidate pages.\n' + error);
+                }
             } else {
+                console.error('Failed to save the blog:', result.error);
                 alert(`Failed to save the blog.\nError: ${result.error}`);
             }
         } catch (error) {
             console.error('Error saving blog:', error);
-            alert('An error occurred while saving the blog');
+            alert('An error occurred while saving the blog.\nError: ' + error);
         }
     };
 
