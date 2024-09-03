@@ -59,7 +59,7 @@ export default function BlogBuilder() {
                 <textarea
                     id="json-input"
                     placeholder="Write your blog post in JSON form here..."
-                    className="w-96 h-96 p-4"
+                    className="w-96 h-96 p-4 bg-dark"
                 />
             </div>
             <button
