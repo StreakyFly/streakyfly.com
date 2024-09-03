@@ -13,7 +13,7 @@ import { CldImage } from '@/components/CldWrapper';
 // export const dynamicParams = false;
 
 export async function generateStaticParams() {
-    const projects = await projectService.getProjects('slug');
+    const projects = await projectService.getPublicProjects('slug');
 
     return projects.map((project) => ({
         slug: project.slug,
@@ -23,11 +23,12 @@ export async function generateStaticParams() {
 // TODO: we call the database (.getProject) twice, once for generateMetadata() and once
 //  for the ProjectPage() component - can we optimize this, so it's only called once?
 export async function generateMetadata({ params }: { params: { slug: string } }) {
-    const project = await projectService.getProject(params.slug, 'title description');
+    const project = await projectService.getPublicProject(params.slug, 'title description');
 
     if (!project) {
         return {
             title: 'Project Not Found',
+            description: 'This project does not exist or has not been published yet.',
         };
     }
 
@@ -38,13 +39,10 @@ export async function generateMetadata({ params }: { params: { slug: string } })
 }
 
 export default async function ProjectPage({ params }: { params: { slug: string } }) {
-    const project = await projectService.getProject(params.slug, '-_id -__v -slug -tags');
+    const project = await projectService.getPublicProject(params.slug, '-_id -__v -slug -tags');
 
     if (!project) {
         return notFound();
-    }
-    if (project.status !== 'public') {
-        return <div>Project is not public.</div>;
     }
 
     return (

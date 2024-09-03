@@ -10,7 +10,6 @@ import { projectService } from '@/database/services';
 
 export async function createProject(data: any) {
     const session = await auth();
-
     if (!session || !session.user || session.user.email !== process.env.ADMIN_GOOGLE_EMAIL) {
         console.error('Unauthorized attempt to create a project.');
         throw new Error('Unauthorized attempt to create a project.');
@@ -26,7 +25,6 @@ export async function createProject(data: any) {
 
 export async function updateProject() {
     const session = await auth();
-
     if (!session || !session.user || session.user.email !== process.env.ADMIN_GOOGLE_EMAIL) {
         console.error('Unauthorized attempt to update a project.');
         throw new Error('Unauthorized attempt to update a project.');
@@ -37,7 +35,6 @@ export async function updateProject() {
 
 export async function deleteProject() {
     const session = await auth();
-
     if (!session || !session.user || session.user.email !== process.env.ADMIN_GOOGLE_EMAIL) {
         console.error('Unauthorized attempt to delete a project.');
         throw new Error('Unauthorized attempt to delete a project.');
