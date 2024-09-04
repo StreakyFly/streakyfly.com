@@ -3,17 +3,17 @@
 import { revalidate } from '@/actions/revalidate';
 import { createProject } from '@/actions/projectActions';
 
-export default function BlogBuilder() {
-    // TEMPORARY ABSOLUTE GARBAGE BLOG BUILDER, if I can even call it that - but it works (if you know exactly
+export default function PostBuilder() {
+    // TEMPORARY ABSOLUTE GARBAGE POST BUILDER, if I can even call it that - but it works (if you know exactly
     // what to write in the textarea and how to structure it).
-    // Example textarea input for a dumbass blog/project post:
+    // Example textarea input for a dumbass project post:
     // {
-    //     "title": "blog-buildah-eggsampul",
+    //     "title": "post-buildah-eggsampul",
     //     "description": "yo did it actually work on just badjillion-th try??",
     //     "imageID": "cld-sample-3",
     //     "status": "public"
     // }
-    const saveBlogPost = async () => {
+    const savePost = async () => {
         const textArea = document.getElementById('json-input') as HTMLTextAreaElement;
 
         let jsonData;
@@ -29,7 +29,7 @@ export default function BlogBuilder() {
             const result = await createProject(jsonData);
 
             if (result.success) {
-                alert('Blog saved successfully!');
+                alert('Post saved successfully!');
                 // Revalidate both the project page and the projects page for now
                 //  -- later check what things changed, did title, desc and imageID change? If not, revalidating
                 //  projects page might not be necessary. Or if project status is private, or stuff like that.
@@ -43,30 +43,30 @@ export default function BlogBuilder() {
                     alert('Failed to revalidate pages.\n' + error);
                 }
             } else {
-                console.error('Failed to save the blog:', result.error);
-                alert(`Failed to save the blog.\nError: ${result.error}`);
+                console.error('Failed to save the post:', result.error);
+                alert(`Failed to save the post.\nError: ${result.error}`);
             }
         } catch (error) {
-            console.error('Error saving blog:', error);
-            alert('An error occurred while saving the blog.\nError: ' + error);
+            console.error('Error saving post:', error);
+            alert('An error occurred while saving the post.\nError: ' + error);
         }
     };
 
     return (
         <div className="flex flex-col items-center justify-center min-h-screen">
-            <h1>Blog Builder</h1>
+            <h1>Post Builder</h1>
             <div>
                 <textarea
                     id="json-input"
-                    placeholder="Write your blog post in JSON form here..."
+                    placeholder="Write your project post in JSON form here..."
                     className="w-96 h-96 p-4 bg-dark"
                 />
             </div>
             <button
-                onClick={saveBlogPost}
+                onClick={savePost}
                 className="bg-blue-600 text-white font-bold py-1.5 px-4 rounded-full transition hover:bg-blue-800"
             >
-                Save blog post
+                Save post
             </button>
         </div>
     );
