@@ -13,7 +13,7 @@ import { ComponentUnion, ComponentSchema } from './Component';
  * And possibly more...
  */
 
-interface Blog extends Document {
+export interface Blog extends Document {
     title: string;
     description: string;
     coverImage: string;  // Cloudinary image ID or URL to image
@@ -54,5 +54,4 @@ const BlogSchema = new Schema<Blog>({
 );
 
 const Blog: Model<Blog> = mongoose.models.Blog || mongoose.model('Blog', BlogSchema);
-
 export default Blog;
