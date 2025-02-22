@@ -139,7 +139,7 @@ export default function Navbar() {
 
             {/* Navbar links visible on screens wider than md breakpoint (768px) */}
             <ul className="hidden md:flex mr-10 justify-end space-x-12 font-light">
-                <li><Link href="/projects">Projects</Link></li>
+                <li><Link href="/blogs">Blogs</Link></li>
                 <li><Link href="/wisdom">Wisdom</Link></li>
             </ul>
 
@@ -164,7 +164,7 @@ export default function Navbar() {
                 >
                     <ul className="space-y-6">
                         <li className="relative">
-                            <Link href="/projects" className="block px-5 text-lg transition duration-150 hover:text-green-light">Projects</Link>
+                            <Link href="/blogs" className="block px-5 text-lg transition duration-150 hover:text-green-light">Blogs</Link>
                             <span className="absolute -bottom-3 left-3 right-3 border-b border-white/20"></span>
                         </li>
                         <li>

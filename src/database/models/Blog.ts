@@ -1,7 +1,7 @@
 import mongoose, { Schema, Document, Model } from 'mongoose';
 
 /**
- * Project Properties.
+ * Blog Properties.
  * REQUIRED:
  * - title: string
  * - description: string
@@ -9,19 +9,19 @@ import mongoose, { Schema, Document, Model } from 'mongoose';
  * - status: string (public, private, draft)
  * - slug: string (otherwise, use title to generate slug)
  * OPTIONAL:
- * - when did I start this project and when did I finish it: Date?
+ * - when did I start this project and when did I finish it: Date? (if it's a project)
  * - tags: string[]
  * - youtube video URL: string
  * - github repo URL: string
- * - project URL: string
- * - body: string (contains the main content of the project, text, images, styling, etc.)
+ * - project URL: string (e.g. live demo)
+ * - body: string (contains the main content of the blog, text, images, styling, etc.)
  * - collaborators: string[]
  * - notes (private): string (e.g. "This project was a pain to work on because of X, Y, Z")
  *
  * And possibly more...
  */
 
-interface IProject extends Document {
+interface IBlog extends Document {
     title: string;
     description: string;
     imageID: string;
@@ -30,7 +30,7 @@ interface IProject extends Document {
     tags?: string[];
 }
 
-const ProjectSchema = new Schema<IProject>({
+const BlogSchema = new Schema<IBlog>({
     title: { type: String, required: true },
     description: { type: String, required: true },
     imageID: { type: String, required: true },
@@ -41,6 +41,6 @@ const ProjectSchema = new Schema<IProject>({
     { timestamps: true }
 );
 
-const Project: Model<IProject> = mongoose.models.Project || mongoose.model('Project', ProjectSchema);
+const Blog: Model<IBlog> = mongoose.models.Blog || mongoose.model('Blog', BlogSchema);
 
-export default Project;
+export default Blog;

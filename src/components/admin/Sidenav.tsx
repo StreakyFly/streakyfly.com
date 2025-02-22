@@ -22,16 +22,16 @@ export default function Sidenav() {
                 {/* TODO: make a component for these items so you simply pass href, text and icon for each and das it*/}
                 <li className="mb-2">
                     <Link
-                        href="/admin/projects"
+                        href="/admin/blogs"
                         className="flex items-center p-2 rounded hover:bg-neutral-600 transition-colors duration-300"
                     >
-                        {isExpanded && <span>Projects</span>}
+                        {isExpanded && <span>Blogs</span>}
                         {!isExpanded && <span>P</span>}
                     </Link>
                 </li>
                 <li className="mb-2">
                     <Link
-                        href="/admin/nah"
+                        href="/admin/placeholder-link-in-Sidenav-tsx"
                         className="flex items-center p-2 rounded hover:bg-neutral-600 transition-colors duration-300"
                     >
                         {isExpanded && <span>Test</span>}

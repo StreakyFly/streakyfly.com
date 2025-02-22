@@ -1,3 +1,3 @@
-import * as projectService from './projectService'
+import * as blogService from './blogService'
 
-export { projectService }
+export { blogService }
