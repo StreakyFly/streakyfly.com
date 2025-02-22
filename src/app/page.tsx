@@ -13,7 +13,7 @@ export default function Home() {
           <SocialMediaIcons />
           {/* Add 3D object component here */}
           <Hero/>
-          <AboutMe/>
+          <AboutMe/>  {/* Perhaps make the bg of this section slightly lighter shade of gray? */}
           <CallToAction/>
       </main>
   );

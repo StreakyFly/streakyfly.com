@@ -22,7 +22,8 @@ export async function generateStaticParams() {
 
 // TODO: we call the database (.getProject) twice, once for generateMetadata() and once
 //  for the ProjectPage() component - can we optimize this, so it's only called once?
-export async function generateMetadata({ params }: { params: { slug: string } }) {
+export async function generateMetadata(props: { params: Promise<{ slug: string }> }) {
+    const params = await props.params;
     const project = await projectService.getPublicProject(params.slug, 'title description');
 
     if (!project) {
@@ -38,7 +39,8 @@ export async function generateMetadata({ params }: { params: { slug: string } })
     };
 }
 
-export default async function ProjectPage({ params }: { params: { slug: string } }) {
+export default async function ProjectPage(props: { params: Promise<{ slug: string }> }) {
+    const params = await props.params;
     const project = await projectService.getPublicProject(params.slug, '-_id -__v -slug -tags');
 
     if (!project) {
