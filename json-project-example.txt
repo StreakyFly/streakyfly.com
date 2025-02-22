@@ -1,6 +1,0 @@
-{
-  "title": "blog-buildah-eggsampul",
-  "description": "yo did it actually work on just badjillion-th try??",
-  "imageID": "cld-sample-3",
-  "status": "public"
-}

@@ -3,7 +3,7 @@ import Link from 'next/link';
 import { CldImage } from '@/components/CldWrapper';
 
 export default async function BlogPage() {
-    const blogs = await blogService.getBlogs('-_id slug title description imageID');
+    const blogs = await blogService.getBlogs('-_id slug title description coverImage');
 
     return (
         <div className="container mx-auto p-4">
@@ -13,7 +13,7 @@ export default async function BlogPage() {
                 {blogs.map((blog) => (
                     <li key={blog.slug} className="flex items-center justify-between p-4 border rounded-lg shadow-sm">
                         <div className="flex items-center space-x-4">
-                            <CldImage src={blog.imageID} alt={blog.imageID} width="64" height="64" style={{ width: "64px", height: "64px" }} className="object-cover rounded-md w-full h-48" />
+                            <CldImage src={blog.coverImage} alt={blog.coverImage} width="64" height="64" style={{ width: "64px", height: "64px" }} className="object-cover rounded-md w-full h-48" />
                             <div>
                                 <h2 className="text-xl font-semibold">{blog.title}</h2>
                                 <p className="text-gray-600">{blog.description}</p>

@@ -1,5 +1,6 @@
 import { notFound } from 'next/navigation';
 import { blogService } from '@/database/services';
+import BlogComponentRenderer from '@/components/blog/BlogComponentRenderer';
 import { CldImage } from '@/components/CldWrapper';
 
 // If user visits invalid/not pre-rendered path (e.g. \blog\i-dont-exist-or-was-just-added-to-db),
@@ -50,9 +51,18 @@ export default async function BlogPage(props: { params: Promise<{ slug: string }
     return (
         <div>
             <h1>{blog.title}</h1>
-            {/* image should have alt attribute in db, in case imageID isn't good enough */}
-            <CldImage src={blog.imageID} alt={blog.imageID} width="512" height="512" style={{ width: "auto", height: "auto" }} />
+            {/* image should have alt attribute in db, in case coverImage isn't good enough */}
+            <CldImage src={blog.coverImage} alt="Should alt be blog.alt? Should I add alt to blog interface & schema?" width="512" height="512" style={{ width: "auto", height: "auto" }} />
             <p>{blog.description}</p>
+
+            {/* Blog Content Renderer */}
+            {blog.components?.length > 0 ? (
+                <BlogComponentRenderer components={blog.components} />
+            ) : (
+                <div className="text-center py-12 text-muted-foreground">
+                    This blog post doesn&#39;t have any content yet.
+                </div>
+            )}
         </div>
     );
 }
