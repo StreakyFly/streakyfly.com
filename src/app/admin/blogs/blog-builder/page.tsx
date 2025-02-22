@@ -4,7 +4,7 @@ import BlogBuilder from './BlogBuilderClient';
 export default async function BlogBuilderPage({ searchParams, }: {
     searchParams: Promise<{ [key: string]: string | string[] | undefined }>
 }) {
-    const editSlug = (await searchParams).filters;
+    const editSlug = (await searchParams).edit;
     const initialData = typeof editSlug === 'string'
         ? await blogService.getBlog(editSlug)
         : null;
