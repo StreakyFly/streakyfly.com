@@ -2,6 +2,7 @@
 
 import { useState } from 'react';
 import { blogActions } from '@/actions';
+import { revalidate } from '@/actions/revalidate';
 
 export default function DeleteButton({ slug, onDelete }: { slug: string; onDelete: () => void }) {
     const [isDeleting, setIsDeleting] = useState(false);
@@ -12,7 +13,9 @@ export default function DeleteButton({ slug, onDelete }: { slug: string; onDelet
         setIsDeleting(true);
         try {
             await blogActions.deleteBlog(slug);
-            onDelete(); // Trigger parent's update
+            onDelete(); // trigger parent's update
+            await revalidate('/blogs');
+            await revalidate(`/blogs/${slug}`);
         } catch (error) {
             console.error('Delete failed:', error);
             alert('Failed to delete blog');
