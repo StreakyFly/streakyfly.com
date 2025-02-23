@@ -32,7 +32,18 @@ export async function getBlog(slug: string, projection: string = '') {
     }
 
     await dbConnect();
-    return Blog.findOne({ slug }, projection).lean();
+    // return Blog.findOne({ slug }, projection).lean();
+    const doc = await Blog.findOne({ slug }, projection).lean();
+
+    if (!doc) return null;
+
+    // Convert Mongoose document to plain object
+    return {
+        ...doc,
+        _id: doc._id.toString(),
+        createdAt: doc.createdAt.toISOString(),
+        updatedAt: doc.updatedAt.toISOString()
+    };
 }
 
 export async function createBlog(data: BlogFormData) {
