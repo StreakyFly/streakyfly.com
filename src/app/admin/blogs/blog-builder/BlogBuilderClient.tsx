@@ -217,6 +217,20 @@ export default function BlogBuilder({ initialData }: {
                         >
                             {isSaving ? 'Saving...' : 'Save Blog'}
                         </button>
+
+                        <label className="block">
+                            <span className="text-sm font-medium">Status</span>
+                            <select
+                                value={blog.status}
+                                onChange={(e) => setBlog(prev => ({ ...prev, status: e.target.value as 'draft' | 'private' | 'public' }))}
+                                className="w-full p-2 border rounded bg-gray-700"
+                                required
+                            >
+                                <option value="draft">Draft</option>
+                                <option value="private">Private</option>
+                                <option value="public">Public</option>
+                            </select>
+                        </label>
                     </div>
                 </form>
 
