@@ -5,6 +5,7 @@ import Link from 'next/link';
 import Image from 'next/image';
 
 function isUserScrolledDownEnough(): boolean {
+    if (typeof window === 'undefined' || window.location.pathname !== '/') return true;
     const aboutMeSection = document.getElementById('about-me');
     if (aboutMeSection) {
         const rect = aboutMeSection.getBoundingClientRect();

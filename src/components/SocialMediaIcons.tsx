@@ -92,7 +92,7 @@ export default function SocialMediaIcons() {
 
             { /* small screens */}
             <div ref={menuRef}
-                 className="fixed md:hidden z-10 bottom-4 right-4 group rounded-md backdrop-blur bg-white/5 border border-white/10 hover:bg-white/15 transition duration-200 ease-in-out"
+                 className="fixed md:hidden z-20 bottom-4 right-4 group rounded-md backdrop-blur bg-white/5 border border-white/10 hover:bg-white/15 transition duration-200 ease-in-out"
                  style={{ clipPath: 'inset(0 round 8px)' }}
             >
                 <button className={`flex flex-col items-center p-3 transition-all duration-300 ease-in-out ${
