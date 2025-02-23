@@ -6,6 +6,7 @@ import { blogActions } from '@/actions';
 import { Blog } from '@/database/models/Blog';
 import DeleteButton from './DeleteButton';
 import Link from 'next/link';
+import { FiRefreshCw } from 'react-icons/fi';
 
 export default function BlogList({ initialBlogs }: { initialBlogs: Blog[] }) {
     const [blogs, setBlogs] = useState<Blog[]>(initialBlogs);
@@ -22,11 +23,19 @@ export default function BlogList({ initialBlogs }: { initialBlogs: Blog[] }) {
     };
 
     return (
-        <div className="container mx-auto p-4">
+        <div className="container mx-auto p-4 relative">
             <h1 className="text-2xl font-bold mb-4">Blogs</h1>
             <Link href="/admin/blogs/blog-builder" className="text-blue-500 hover:underline mb-8 inline-block text-xl">
                 Create New Blog
             </Link>
+            <button
+                onClick={refreshBlogs}
+                className="text-white bg-blue-500 hover:bg-blue-700 font-bold py-2 px-4 rounded mb-4 flex items-center absolute top-4 right-4"
+                disabled={loading}
+            >
+                <FiRefreshCw className={`mr-2 ${loading ? 'animate-spin' : ''}`} />
+                {loading ? 'Refreshing...' : 'Refresh Blogs'}
+            </button>
 
             {loading && <div className="text-gray-500 mb-4">Refreshing blogs...</div>}
 
