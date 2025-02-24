@@ -39,21 +39,34 @@ export async function generateMetadata(props: { params: Promise<{ slug: string }
                     height: 630,
                     alt: 'very sad cat in tears, so sad because the page was not found',
                 }],
+            },
+            twitter: {
+                card: "summary_large_image",
+                creator: "@streakyfly",
+                site: "@streakyfly",
+                images: "/og/not-found.jpg"
             }
         };
     }
 
+    const imageUrl = getCloudinaryImageUrl(blog.coverImage);
     return {
         title: blog.title,
         description: blog.description,
         openGraph: {
             images: [{
-                url: getCloudinaryImageUrl(blog.coverImage),
+                url: imageUrl,
                 width: 1200,
                 height: 630,
                 alt: blog.title,  // TODO: replace with blog.coverImageAlt or smt like that
             }],
             publishedTime: blog.createdAt.toISOString(),
+        },
+        twitter: {
+            card: "summary_large_image",
+            creator: "@streakyfly",
+            site: "@streakyfly",
+            images: imageUrl,
         }
     };
 }

@@ -1,8 +1,9 @@
 import { blogService } from '@/database/services';
 import { CldImage } from '@/components/CldWrapper';
 import Link from 'next/link';
+import type { Metadata } from "next";
 
-export const metadata = {
+export const metadata: Metadata = {
     title: "Blogs",
     description: "Explore my epic blogs",
     openGraph: {
@@ -16,6 +17,7 @@ export const metadata = {
     },
     twitter: {
         card: "summary_large_image",
+        site: "@streakyfly",
         creator: "@streakyfly",
         images: "/og/default.jpg"
     }
