@@ -44,7 +44,7 @@ export async function generateMetadata(props: { params: Promise<{ slug: string }
                 height: 630,
                 alt: blog.title,  // TODO: replace with blog.coverImageAlt or smt like that
             }],
-            publishedTime: blog.createdAt.toISOString()
+            publishedTime: blog.createdAt,
         }
     };
 }
