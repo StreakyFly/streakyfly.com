@@ -37,6 +37,15 @@ export async function generateMetadata(props: { params: Promise<{ slug: string }
     return {
         title: blog.title,
         description: blog.description,
+        openGraph: {
+            images: [{
+                url: blog.coverImage,
+                width: 1200,
+                height: 630,
+                alt: blog.title,  // TODO: replace with blog.coverImageAlt or smt like that
+            }],
+            publishedTime: blog.createdAt.toISOString()
+        }
     };
 }
 

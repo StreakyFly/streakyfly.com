@@ -12,12 +12,12 @@ export const metadata: Metadata = {
         default: "StreakyFly's Legendary Site",
         template: "%s | StreakyFly",
     },
-    description: "StreakyFly's personal website. A place to share uhh... stuff.",
+    description: "StreakyFly's personal website. It contains things and words and stuff.",
     openGraph: {
         title: "StreakyFly",
-        description: "StreakyFly's personal website. A place to share uhh... stuff.",
+        description: "StreakyFly's personal website. It contains things and words and stuff.",
         images: [{
-            url: "default-og.jpg",
+            url: "/og/default-og.jpg",
             width: 1200,
             height: 630,
         }],
@@ -27,7 +27,7 @@ export const metadata: Metadata = {
         card: "summary_large_image",
         creator: "@streakyfly",
         site: "@streakyfly",
-        images: "default-og.jpg"
+        images: "/og/default-og.jpg"
     }
 };
 

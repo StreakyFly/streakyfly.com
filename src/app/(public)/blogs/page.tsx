@@ -3,8 +3,22 @@ import { CldImage } from '@/components/CldWrapper';
 import Link from 'next/link';
 
 export const metadata = {
-    title: 'Blogs',
-    description: 'Explore my blogs',
+    title: "Blogs",
+    description: "Explore my epic blogs",
+    openGraph: {
+        title: "Blogs",
+        description: "Explore my epic blogs",
+        images: [{
+            url:"/og/default-og.jpg",
+            width: 1200,
+            height: 630
+        }],
+    },
+    twitter: {
+        card: "summary_large_image",
+        creator: "@streakyfly",
+        images: "/og/default-og.jpg"
+    }
 };
 
 export default async function Blogs() {
