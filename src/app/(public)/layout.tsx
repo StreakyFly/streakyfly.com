@@ -8,7 +8,7 @@ export default function PublicLayout({ children }: Readonly<{
 }>) {
     return (
         <div className="flex flex-col min-h-screen">
-            <main className="flex-grow pt-20 md:pt-24">
+            <main className="flex-grow mt-20 md:mt-24">
                 {children}
             </main>
             <Navbar />

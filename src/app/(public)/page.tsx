@@ -5,7 +5,7 @@ import CallToAction from '@/components/sections/CallToAction';
 
 export default function Home() {
   return (
-      <main className="relative min-h-screen bg-dark z-10">
+      <main className="relative min-h-screen bg-dark z-10 -mt-20 md:-mt-24">
           <BlurOverlay />
           {/* Add 3D object component here */}
           <Hero/>
