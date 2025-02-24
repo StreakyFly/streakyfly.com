@@ -9,7 +9,7 @@ export const metadata = {
         title: "Blogs",
         description: "Explore my epic blogs",
         images: [{
-            url:"/og/default-og.jpg",
+            url:"/og/default.jpg",
             width: 1200,
             height: 630
         }],
@@ -17,7 +17,7 @@ export const metadata = {
     twitter: {
         card: "summary_large_image",
         creator: "@streakyfly",
-        images: "/og/default-og.jpg"
+        images: "/og/default.jpg"
     }
 };
 

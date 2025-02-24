@@ -2,6 +2,7 @@ import { notFound } from 'next/navigation';
 import { blogService } from '@/database/services';
 import BlogComponentRenderer from '@/components/blog/BlogComponentRenderer';
 import { CldImage } from '@/components/CldWrapper';
+import { getCloudinaryImageUrl } from '@/utils/cloudinary';
 
 // If user visits invalid/not pre-rendered path (e.g. \blog\i-dont-exist-or-was-just-added-to-db),
 // they should see a 404 - Not Found page -- it should **NOT** connect to the database, attempt to fetch
@@ -31,6 +32,14 @@ export async function generateMetadata(props: { params: Promise<{ slug: string }
         return {
             title: 'Blog Not Found',
             description: 'This blog does not exist or has not been published yet.',
+            openGraph: {
+                images: [{
+                    url: '/og/not-found.jpg',
+                    width: 1200,
+                    height: 630,
+                    alt: 'very sad cat in tears, so sad because the page was not found',
+                }],
+            }
         };
     }
 
@@ -39,7 +48,7 @@ export async function generateMetadata(props: { params: Promise<{ slug: string }
         description: blog.description,
         openGraph: {
             images: [{
-                url: blog.coverImage,
+                url: getCloudinaryImageUrl(blog.coverImage),
                 width: 1200,
                 height: 630,
                 alt: blog.title,  // TODO: replace with blog.coverImageAlt or smt like that
