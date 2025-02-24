@@ -26,7 +26,7 @@ export async function generateStaticParams() {
 //  for the BlogPage() component - can we optimize this, so it's only called once?
 export async function generateMetadata(props: { params: Promise<{ slug: string }> }) {
     const params = await props.params;
-    const blog = await blogService.getPublicBlog(params.slug, 'title description');
+    const blog = await blogService.getPublicBlog(params.slug, '-_id title description coverImage createdAt');
 
     if (!blog) {
         return {
@@ -53,7 +53,7 @@ export async function generateMetadata(props: { params: Promise<{ slug: string }
                 height: 630,
                 alt: blog.title,  // TODO: replace with blog.coverImageAlt or smt like that
             }],
-            publishedTime: blog.createdAt,
+            publishedTime: blog.createdAt.toISOString(),
         }
     };
 }
