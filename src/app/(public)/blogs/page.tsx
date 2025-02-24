@@ -1,5 +1,6 @@
 import { blogService } from '@/database/services';
 import { CldImage } from '@/components/CldWrapper';
+import Link from 'next/link';
 
 export const metadata = {
     title: 'Blogs',
@@ -19,7 +20,7 @@ export default async function Blogs() {
             <p className="text-gray-200 mb-4">the entire page, its design and all displayed blogs are a placeholder, if it&apos;s not obvious</p>
             <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4">
                 {blogs.map((blog: any) => (
-                    <a key={blog.slug} href={`/blogs/${blog.slug}`} className="block no-underline">
+                    <Link key={blog.slug} href={`/blogs/${blog.slug}`} className="block no-underline">
                         <div className="blog-card border-gray-500 border rounded-lg p-4 shadow-lg">
                             <div className="image-container w-full h-48 mb-4">
                                 {/*alt=should be actual alt, not just coverImage url or id or whateva*/}
@@ -29,7 +30,7 @@ export default async function Blogs() {
                             <h2 className="text-xl font-semibold mb-2">{blog.title}</h2>
                             <p className="text-gray-200">{blog.description}</p>
                         </div>
-                    </a>
+                    </Link>
                 ))}
             </div>
         </div>

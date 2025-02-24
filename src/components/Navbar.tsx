@@ -3,14 +3,18 @@
 import React, { useEffect, useRef, useState } from 'react';
 import Link from 'next/link';
 import Image from 'next/image';
+import { usePathname, useRouter } from 'next/navigation';
 
-function isUserScrolledDownEnough(): boolean {
-    if (typeof window === 'undefined' || window.location.pathname !== '/') return true;
+function shouldShowLogo(pathname: string): boolean {
+    // Always show logo on non-home pages
+    if (pathname !== '/') return true;
+
+    // Show logo on home page only if user has scrolled down past the hero section
+    if (typeof window === 'undefined') return false;
     const aboutMeSection = document.getElementById('about-me');
     if (aboutMeSection) {
         const rect = aboutMeSection.getBoundingClientRect();
         return rect.top <= aboutMeSection.clientHeight / 8;
-        // return rect.top <= 0;
     }
     return false;
 }
@@ -21,11 +25,22 @@ function checkTouchDevice(): boolean {
 }
 
 export default function Navbar() {
-    const [showLogo, setShowLogo] = useState(false);
+    const pathname = usePathname();
+    const router = useRouter();
+    const [showLogo, setShowLogo] = useState(() => shouldShowLogo(pathname));
     const [isMenuOpen, setIsMenuOpen] = useState(false);
     const menuRef = useRef<HTMLDivElement>(null);
     const buttonRef = useRef<HTMLButtonElement>(null);
     const logoRef = useRef<HTMLDivElement>(null);
+
+    const handleLogoClick = (event: React.MouseEvent<HTMLAnchorElement, MouseEvent>) => {
+        if (pathname !== '/') {
+            router.push('/');
+        } else {
+            event.preventDefault();
+            window.scrollTo({ top: 0, behavior: 'smooth' });
+        }
+    }
 
     useEffect(() => {
         // Effect to handle hamburger menu
@@ -80,10 +95,10 @@ export default function Navbar() {
     //  you weren't? :flushed:
     useEffect(() => {
         // Effect to handle logo/home button
-        setShowLogo(isUserScrolledDownEnough());
+        setShowLogo(shouldShowLogo(pathname));
 
         const handleScroll = () => {
-            setShowLogo(isUserScrolledDownEnough());
+            setShowLogo(shouldShowLogo(pathname));
         };
 
         const isTouchDevice = checkTouchDevice();
@@ -106,12 +121,7 @@ export default function Navbar() {
             window.removeEventListener('scroll', handleScroll);
             if (isTouchDevice) window.removeEventListener('touchstart', handleTouchStart);
         };
-    }, [showLogo]);
-
-    const handleLogoClick = (event: React.MouseEvent<HTMLAnchorElement, MouseEvent>) => {
-        event.preventDefault();
-        window.scrollTo({ top: 0, behavior: 'smooth' });
-    }
+    }, [pathname, showLogo]);
 
     return (
         <nav className="fixed z-10 top-4 md:top-9 flex w-full items-center justify-between text-3xl text-white">

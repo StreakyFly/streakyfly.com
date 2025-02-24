@@ -83,7 +83,7 @@ export default function SocialMediaIcons() {
     return (
         <>
             { /* big screens */}
-            <div className="hidden md:flex fixed z-10 bottom-8 right-8 flex-col space-y-8">
+            <div className="hidden md:flex fixed z-20 bottom-8 right-8 flex-col space-y-8">
                 <SocialMediaIcon src="/icons/x-twitter.svg" alt="X" width={36} href="https://x.com/StreakyFly"/>
                 <SocialMediaIcon src="/icons/youtube.svg" alt="YouTube" width={36} href="https://www.youtube.com/@StreakyFly/videos"/>
                 <SocialMediaIcon src="/icons/discord.svg" alt="Discord" width={36} href="https://discord.com/invite/t83eZHs"/>
