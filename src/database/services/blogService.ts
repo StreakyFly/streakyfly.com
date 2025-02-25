@@ -1,6 +1,6 @@
 import dbConnect from '@/database/mongoose';
 import Blog from '@/database/models/Blog';
-import { BlogFormData } from '@/types/blog';
+import { BaseBlog } from '@/types/blog';
 import { auth } from '@/auth';
 
 export async function getPublicBlogs(projection: string = '') {
@@ -46,7 +46,7 @@ export async function getBlog(slug: string, projection: string = '') {
     };
 }
 
-export async function createBlog(data: BlogFormData) {
+export async function createBlog(data: BaseBlog) {
     const session = await auth();
     if (!session?.user || session.user.email !== process.env.ADMIN_GOOGLE_EMAIL) {
         console.error('Unauthorized attempt to create a blog.');
@@ -63,7 +63,7 @@ export async function createBlog(data: BlogFormData) {
     return newBlog.save();
 }
 
-export async function updateBlog(slug: string, updateData: BlogFormData) {
+export async function updateBlog(slug: string, updateData: BaseBlog) {
     const session = await auth();
     if (!session?.user || session.user.email !== process.env.ADMIN_GOOGLE_EMAIL) {
         console.error('Unauthorized attempt to update a blog.');

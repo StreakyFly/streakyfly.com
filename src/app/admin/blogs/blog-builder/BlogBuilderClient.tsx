@@ -1,70 +1,47 @@
 'use client';
 
-import React, { useState, useEffect } from 'react';
+import { useEffect, useState } from 'react';
 import { useRouter } from 'next/navigation';
 import { createBlog, updateBlog } from '@/actions/blogActions';
 import { revalidate } from '@/actions/revalidate';
-import type { ComponentUnion } from '@/database/models/Component';
-import { BlogFormData } from '@/types/blog';
+import { BlogState, BlogStatus } from '@/types/blog';
 import BlogComponentRenderer from '@/components/blog/BlogComponentRenderer';
 import { FiEye, FiEyeOff, FiChevronLeft, FiChevronRight } from 'react-icons/fi';
 import { CldImage } from '@/components/CldWrapper';
-
-const INITIAL_BLOG_STATE: BlogFormData = {
-    title: '',
-    description: '',
-    coverImage: '',
-    slug: '',
-    components: [],
-    status: 'draft',
-    tags: [],
-}
+import { useBlogStore } from '@/stores/useBlogStore';
 
 export default function BlogBuilder({ initialData }: {
-    initialData?: BlogFormData | null
+    initialData?: BlogState | null
 }) {
     const router = useRouter();
-    const [blog, setBlog] = useState<BlogFormData>(initialData || INITIAL_BLOG_STATE);
+    const {
+        blog,
+        setBlog,
+        addComponent,
+        updateComponent,
+        deleteComponent
+    } = useBlogStore();
     const [isSaving, setIsSaving] = useState(false);
     const [showPreview, setShowPreview] = useState(true);
     const [previewWidth, setPreviewWidth] = useState<'33%' | '50%' | '66%'>('50%');
 
-    // Initialize form with existing data if editing
+    useEffect(() => {
+        return () => {
+            // Cleanup when component unmounts
+            useBlogStore.getState().resetBlog();
+        };
+    }, []);
+
+    // Initialize store with data from server
     useEffect(() => {
         if (initialData) {
             setBlog(initialData);
+        } else {
+            // Reset to empty state for new blogs
+            // setBlog(useBlogStore.getState().initialState);
+            setBlog(useBlogStore.getState().blog);
         }
-    }, [initialData]);
-
-    const addComponent = (type: ComponentUnion['type']) => {
-        const newComponent: ComponentUnion = type === 'paragraph'
-            ? { id: crypto.randomUUID(), type, text: '' }
-            : { id: crypto.randomUUID(), type, src: '', alt: '' };
-
-        setBlog(prev => ({
-            ...prev,
-            components: [...prev.components, newComponent]
-        }));
-    };
-
-    const updateComponent = (id: string, updates: Partial<ComponentUnion>) => {
-        setBlog(prev => ({
-            ...prev,
-            components: prev.components.map(comp =>
-                comp.id === id ? {
-                    ...comp,
-                    ...updates
-                } as ComponentUnion : comp
-            )
-        }));
-    };
-
-    const deleteComponent = (id: string) => {
-        setBlog(prev => ({
-            ...prev,
-            components: prev.components.filter(comp => comp.id !== id)
-        }))
-    };
+    }, [initialData, setBlog]);
 
     const handleSubmit = async (e: React.FormEvent) => {
         e.preventDefault();
@@ -72,12 +49,14 @@ export default function BlogBuilder({ initialData }: {
 
         try {
             let result;
-            if (initialData) {
+            const currentBlog = useBlogStore.getState().blog;
+
+            if (initialData?.slug) {
                 // Update existing blog
-                result = await updateBlog(initialData.slug, blog);
+                result = await updateBlog(initialData.slug, currentBlog);
             } else {
                 // Create new blog
-                result = await createBlog(blog);
+                result = await createBlog(currentBlog);
             }
 
             if (result?.success) {
@@ -94,7 +73,6 @@ export default function BlogBuilder({ initialData }: {
             setIsSaving(false);
         }
     };
-
 
     return (
         <div className="relative h-screen flex">
@@ -122,7 +100,9 @@ export default function BlogBuilder({ initialData }: {
                             <input
                                 type="text"
                                 value={blog.title}
-                                onChange={(e) => setBlog(prev => ({ ...prev, title: e.target.value }))}
+                                onChange={(e) => useBlogStore.setState(state => {
+                                    state.blog.title = e.target.value;
+                                })}
                                 className="w-full p-2 border rounded bg-gray-700"
                                 required
                             />
@@ -132,7 +112,9 @@ export default function BlogBuilder({ initialData }: {
                             <span className="text-sm font-medium">Description</span>
                             <textarea
                                 value={blog.description}
-                                onChange={(e) => setBlog(prev => ({ ...prev, description: e.target.value }))}
+                                onChange={(e) => useBlogStore.setState(state => {
+                                    state.blog.description = e.target.value;
+                                })}
                                 className="w-full p-2 border rounded h-24 bg-gray-700"
                                 required
                             />
@@ -143,7 +125,9 @@ export default function BlogBuilder({ initialData }: {
                             <input
                                 type="text"
                                 value={blog.coverImage}
-                                onChange={(e) => setBlog(prev => ({ ...prev, coverImage: e.target.value }))}
+                                onChange={(e) => useBlogStore.setState(state => {
+                                    state.blog.coverImage = e.target.value;
+                                })}
                                 className="w-full p-2 border rounded bg-gray-700"
                             />
                         </label>
@@ -154,14 +138,25 @@ export default function BlogBuilder({ initialData }: {
                         <div className="flex gap-4">
                             <button
                                 type="button"
-                                onClick={() => addComponent('paragraph')}
+                                onClick={() => addComponent({
+                                    id: crypto.randomUUID(),
+                                    type: 'paragraph',
+                                    text: 'New paragraph...',
+                                    style: {}
+                                })}
                                 className="px-4 py-2 bg-blue-600 text-white rounded"
                             >
                                 Add Paragraph
                             </button>
                             <button
                                 type="button"
-                                onClick={() => addComponent('image')}
+                                onClick={() => addComponent({
+                                    id: crypto.randomUUID(),
+                                    type: 'image',
+                                    src: '',
+                                    alt: '',
+                                    style: {}
+                                })}
                                 className="px-4 py-2 bg-green-600 text-white rounded"
                             >
                                 Add Image
@@ -222,7 +217,9 @@ export default function BlogBuilder({ initialData }: {
                             <span className="text-sm font-medium">Status</span>
                             <select
                                 value={blog.status}
-                                onChange={(e) => setBlog(prev => ({ ...prev, status: e.target.value as 'draft' | 'private' | 'public' }))}
+                                onChange={(e) => useBlogStore.setState(state => {
+                                    state.blog.status = e.target.value as BlogStatus;
+                                })}
                                 className="w-full p-2 border rounded bg-gray-700"
                                 required
                             >

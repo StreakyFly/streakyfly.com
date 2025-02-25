@@ -1,31 +1,11 @@
 import mongoose, { Schema, Document, Model } from 'mongoose';
-import { ComponentUnion, ComponentSchema } from './Component';
+import { ComponentSchema } from './Component';
+import { BaseBlog, BlogStatus, BlogType } from '@/types/blog';
 
-export enum BlogStatus {
-    Draft = 'draft',
-    Private = 'private',
-    Public = 'public',
-}
-
-export enum BlogType {
-    Project = 'project',
-    Tutorial = 'tutorial',
-    Review = 'review',
-    // more to be added...
-}
-
-export interface Blog extends Document {
-    title: string;
-    description: string;
-    coverImage: string;  // Cloudinary image ID or URL to image
-    slug: string;
-    status: BlogStatus;
-    types: BlogType[];
-    tags: string[];
-    createdAt: Date;  // automatically added by mongoose
-    updatedAt: Date;  // automatically added by mongoose
-    __v: number;      // automatically added by mongoose
-    components: ComponentUnion[];
+export interface Blog extends BaseBlog, Document {
+    createdAt: Date;  // automatically added by Mongoose
+    updatedAt: Date;  // automatically added by Mongoose
+    __v: number;      // automatically added by Mongoose
 }
 
 const BlogSchema = new Schema<Blog>({
@@ -61,7 +41,6 @@ const BlogSchema = new Schema<Blog>({
         timestamps: true,
         versionKey: '__v',
         strict: true,
-        _id: true,
     }
 );
 
