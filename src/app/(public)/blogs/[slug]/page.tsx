@@ -2,7 +2,7 @@ import { notFound } from 'next/navigation';
 import { blogService } from '@/database/services';
 import BlogComponentRenderer from '@/components/blog/BlogComponentRenderer';
 import { CldImage } from '@/components/CldWrapper';
-import { getCloudinaryImageUrl } from '@/utils/cloudinary';
+import { getCloudinaryImageUrl } from '@/lib/cloudinary';
 
 // If user visits invalid/not pre-rendered path (e.g. \blog\i-dont-exist-or-was-just-added-to-db),
 // they should see a 404 - Not Found page -- it should **NOT** connect to the database, attempt to fetch
