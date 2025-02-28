@@ -41,8 +41,8 @@ export async function getBlog(slug: string, projection: string = '') {
     return {
         ...doc,
         _id: doc._id.toString(),
-        createdAt: doc.createdAt.toISOString(),
-        updatedAt: doc.updatedAt.toISOString()
+        // createdAt: doc.createdAt.toISOString(),
+        // updatedAt: doc.updatedAt.toISOString()
     };
 }
 
