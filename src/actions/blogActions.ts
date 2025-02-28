@@ -6,7 +6,7 @@
 
 import { auth } from '@/auth';
 import { blogService } from '@/database/services';
-import { BlogFormData } from '@/types/blog';
+import { BaseBlog } from '@/types/blog';
 
 export async function createBlog(data: any) {
     const session = await auth();
@@ -23,7 +23,7 @@ export async function createBlog(data: any) {
     }
 }
 
-export async function updateBlog(slug: string, updateData: BlogFormData) {
+export async function updateBlog(slug: string, updateData: BaseBlog) {
     const session = await auth();
     if (!session?.user || session.user.email !== process.env.ADMIN_GOOGLE_EMAIL) {
         console.error('Unauthorized attempt to update a blog.');

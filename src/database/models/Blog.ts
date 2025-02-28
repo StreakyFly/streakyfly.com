@@ -1,29 +1,11 @@
 import mongoose, { Schema, Document, Model } from 'mongoose';
-import { ComponentUnion, ComponentSchema } from './Component';
+import { ComponentSchema } from './Component';
+import { BaseBlog, BlogStatus, BlogType } from '@/types/blog';
 
-/**
- * OPTIONAL BLOG PROPERTIES:
- * - when did I start this project and when did I finish it: Date? (if it's a project)
- * - youtube video URL: string
- * - github repo URL: string
- * - project URL: string (e.g. live demo)
- * - collaborators: string[]
- * - notes (private): string (e.g. "This project was a pain to work on because of X, Y, Z")
- *
- * And possibly more...
- */
-
-export interface Blog extends Document {
-    title: string;
-    description: string;
-    coverImage: string;  // Cloudinary image ID or URL to image
-    slug: string;
-    status: 'draft' | 'private' | 'public';
-    tags?: string[];
-    createdAt: Date;  // automatically added by mongoose
-    updatedAt: Date;  // automatically added by mongoose
-    __v: number;      // automatically added by mongoose
-    components: ComponentUnion[];
+export interface Blog extends BaseBlog, Document {
+    createdAt: Date;  // automatically added by Mongoose
+    updatedAt: Date;  // automatically added by Mongoose
+    __v: number;      // automatically added by Mongoose
 }
 
 const BlogSchema = new Schema<Blog>({
@@ -39,17 +21,26 @@ const BlogSchema = new Schema<Blog>({
     status: {
         type: String,
         required: true,
-        enum: ['draft', 'private', 'public'],
-        default: 'draft',
+        enum: Object.values(BlogStatus),
+        default: BlogStatus.Draft,
     },
-    tags: { type: [String], required: false, },
-    components: { type: [ComponentSchema], required: false, },
+    types: {
+        type: [String],
+        required: true,
+        enum: Object.values(BlogType),
     },
-    {
+    tags: {
+        type: [String],
+        required: true,
+    },
+    components: {
+        type: [ComponentSchema],
+        required: false,
+    },
+    }, {
         timestamps: true,
         versionKey: '__v',
         strict: true,
-        _id: true,
     }
 );
 

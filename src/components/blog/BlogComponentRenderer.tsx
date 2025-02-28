@@ -1,4 +1,4 @@
-import { ComponentUnion } from '@/database/models/Component';
+import { ComponentUnion } from '@/types/component';
 import { CldImage } from '@/components/CldWrapper';
 
 interface BlogRendererProps {
