@@ -8,22 +8,20 @@ export type ComponentUnion =
     | ImageComponent
     ;
 
-export interface BaseComponent {
+export interface BaseComponent<T extends string> {
     id: string;
-    type: string;
+    type: T;
     style?: Record<string, any>;
 }
 
 
 // Component Interfaces
-export interface ParagraphComponent extends BaseComponent {
-    type: 'paragraph';
+export interface ParagraphComponent extends BaseComponent<'paragraph'> {
     text: string;
     fontSize?: string;
 }
 
-export interface ImageComponent extends BaseComponent {
-    type: 'image';
+export interface ImageComponent extends BaseComponent<'image'> {
     src: string;
     alt: string;
 }

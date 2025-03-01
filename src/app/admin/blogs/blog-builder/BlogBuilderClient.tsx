@@ -1,14 +1,13 @@
 'use client';
 
-import { useEffect, useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import { useRouter } from 'next/navigation';
 import { createBlog, updateBlog } from '@/actions/blogActions';
 import { revalidate } from '@/actions/revalidate';
-import { BlogState, BlogStatus } from '@/types/blog';
-import BlogComponentRenderer from '@/components/blog/BlogComponentRenderer';
-import { FiEye, FiEyeOff, FiChevronLeft, FiChevronRight } from 'react-icons/fi';
-import { CldImage } from '@/components/CldWrapper';
 import { useBlogStore } from '@/stores/useBlogStore';
+import { CldImage } from '@/components/CldWrapper';
+import { BlogState, BlogStatus } from '@/types/blog';
+import EditableBlogComponentRenderer from '@/components/blog/EditableBlogComponentRenderer';
 
 export default function BlogBuilder({ initialData }: {
     initialData?: BlogState | null
@@ -18,30 +17,28 @@ export default function BlogBuilder({ initialData }: {
         blog,
         setBlog,
         addComponent,
-        updateComponent,
-        deleteComponent
+        resetBlog
     } = useBlogStore();
     const [isSaving, setIsSaving] = useState(false);
-    const [showPreview, setShowPreview] = useState(true);
-    const [previewWidth, setPreviewWidth] = useState<'33%' | '50%' | '66%'>('50%');
+    const [editingComponentId, setEditingComponentId] = useState<string | null>(null);
 
+    // Initialize store
     useEffect(() => {
-        return () => {
-            // Cleanup when component unmounts
-            useBlogStore.getState().resetBlog();
+        initialData ? setBlog(initialData) : resetBlog();
+        return () => resetBlog();
+    }, [initialData, setBlog, resetBlog]);
+
+    // Click-outside handler
+    useEffect(() => {
+        const handleClickOutside = (e: MouseEvent) => {
+            console.log(e.target);
+            if (e.target instanceof HTMLElement && e.target.tagName == 'MAIN') {
+                setEditingComponentId(null);
+            }
         };
+        document.addEventListener('click', handleClickOutside);
+        return () => document.removeEventListener('click', handleClickOutside);
     }, []);
-
-    // Initialize store with data from server
-    useEffect(() => {
-        if (initialData) {
-            setBlog(initialData);
-        } else {
-            // Reset to empty state for new blogs
-            // setBlog(useBlogStore.getState().initialState);
-            setBlog(useBlogStore.getState().blog);
-        }
-    }, [initialData, setBlog]);
 
     const handleSubmit = async (e: React.FormEvent) => {
         e.preventDefault();
@@ -57,6 +54,9 @@ export default function BlogBuilder({ initialData }: {
             } else {
                 // Create new blog
                 result = await createBlog(currentBlog);
+                if (!result.success) {
+                    throw new Error(result.error);
+                }
             }
 
             if (result?.success) {
@@ -74,206 +74,129 @@ export default function BlogBuilder({ initialData }: {
         }
     };
 
+
     return (
-        <div className="relative h-screen flex">
-            {/* Editor Panel */}
-            <div className={`h-full overflow-y-auto p-6 transition-all duration-300 ${showPreview ? 'w-1/2' : 'w-full'} bg-gray-900`}>
-                <div className="flex justify-between items-center mb-6">
-                    <h1 className="text-3xl font-bold text-white">Blog Builder</h1>
-                    <div className="flex gap-2">
-                        <button
-                            type="button"
-                            onClick={() => setShowPreview(!showPreview)}
-                            className="p-2 hover:bg-gray-800 rounded-full text-white"
-                            title={showPreview ? 'Hide preview' : 'Show preview'}
-                        >
-                            {showPreview ? <FiEyeOff size={20} /> : <FiEye size={20} />}
-                        </button>
-                    </div>
+        <div className="h-screen flex flex-col">
+            {/* Top Bar */}
+            <header className="bg-neutral-800 border-b p-4 flex items-center justify-between">
+                <div className="flex gap-4 flex-1 max-w-4xl text-neutral-950">
+                    <input
+                        type="text"
+                        value={blog.title}
+                        onChange={(e) => useBlogStore.setState(s => ({ blog: { ...s.blog, title: e.target.value } }))}
+                        placeholder="Blog title"
+                        className="text-2xl font-bold flex-1 p-2 border rounded"
+                    />
+                    <input
+                        type="text"
+                        value={blog.description}
+                        onChange={(e) => useBlogStore.setState(s => ({ blog: { ...s.blog, description: e.target.value } }))}
+                        placeholder="Description"
+                        className="flex-1 p-2 border rounded"
+                    />
+                    <button
+                        type="submit"
+                        onClick={handleSubmit}
+                        disabled={isSaving}
+                        className="px-6 py-2 bg-blue-600 text-white rounded disabled:opacity-50"
+                    >
+                        {isSaving ? 'Saving...' : 'Save'}
+                    </button>
                 </div>
+            </header>
 
-                <form onSubmit={handleSubmit}>
-                    {/* Basic Metadata */}
-                    <div className="space-y-4">
-                        <label className="block">
-                            <span className="text-sm font-medium">Title</span>
-                            <input
-                                type="text"
-                                value={blog.title}
-                                onChange={(e) => useBlogStore.setState(state => {
-                                    state.blog.title = e.target.value;
-                                })}
-                                className="w-full p-2 border rounded bg-gray-700"
-                                required
-                            />
-                        </label>
+            <div className="flex flex-1 overflow-hidden">
+                {/* Left Sidebar - Components */}
+                <aside className="w-64 border-r bg-neutral-800 p-4 flex flex-col gap-2">
+                    <button
+                        onClick={() => addComponent({
+                            id: crypto.randomUUID(),
+                            type: 'paragraph',
+                            text: 'Enter your text here...',
+                        })}
+                        className="p-2 w-full text-left hover:bg-neutral-900 rounded"
+                    >
+                        + Add Paragraph
+                    </button>
+                    <button
+                        onClick={() => addComponent({
+                            id: crypto.randomUUID(),
+                            type: 'image',
+                            src: 'cld-sample',
+                            alt: '',
+                        })}
+                        className="p-2 w-full text-left hover:bg-neutral-900 rounded"
+                    >
+                        + Add Image
+                    </button>
+                </aside>
 
-                        <label className="block">
-                            <span className="text-sm font-medium">Description</span>
-                            <textarea
-                                value={blog.description}
-                                onChange={(e) => useBlogStore.setState(state => {
-                                    state.blog.description = e.target.value;
-                                })}
-                                className="w-full p-2 border rounded h-24 bg-gray-700"
-                                required
-                            />
-                        </label>
-
-                        <label className="block">
-                            <span className="text-sm font-medium">Cover Image URL</span>
-                            <input
-                                type="text"
-                                value={blog.coverImage}
-                                onChange={(e) => useBlogStore.setState(state => {
-                                    state.blog.coverImage = e.target.value;
-                                })}
-                                className="w-full p-2 border rounded bg-gray-700"
-                            />
-                        </label>
-                    </div>
-
-                    {/* Component Builder */}
-                    <div className="space-y-6">
-                        <div className="flex gap-4">
-                            <button
-                                type="button"
-                                onClick={() => addComponent({
-                                    id: crypto.randomUUID(),
-                                    type: 'paragraph',
-                                    text: 'New paragraph...',
-                                    style: {}
-                                })}
-                                className="px-4 py-2 bg-blue-600 text-white rounded"
-                            >
-                                Add Paragraph
-                            </button>
-                            <button
-                                type="button"
-                                onClick={() => addComponent({
-                                    id: crypto.randomUUID(),
-                                    type: 'image',
-                                    src: '',
-                                    alt: '',
-                                    style: {}
-                                })}
-                                className="px-4 py-2 bg-green-600 text-white rounded"
-                            >
-                                Add Image
-                            </button>
-                        </div>
-
-                        {blog.components.map((component) => (
-                            <div key={component.id} className="border p-4 rounded-lg">
-                                {component.type === 'paragraph' ? (
-                                    <div className="space-y-2">
-                      <textarea
-                          value={component.text}
-                          onChange={(e) => updateComponent(component.id, { text: e.target.value })}
-                          className="w-full p-2 border rounded h-32 bg-gray-700"
-                          placeholder="Enter paragraph text..."
-                      />
-                                    </div>
-                                ) : (
-                                    <div className="space-y-2">
-                                        <input
-                                            type="text"
-                                            value={component.src}
-                                            onChange={(e) => updateComponent(component.id, { src: e.target.value })}
-                                            placeholder="Image URL"
-                                            className="w-full p-2 border rounded bg-gray-700"
-                                        />
-                                        <input
-                                            type="text"
-                                            value={component.alt}
-                                            onChange={(e) => updateComponent(component.id, { alt: e.target.value })}
-                                            placeholder="Alt text"
-                                            className="w-full p-2 border rounded bg-gray-700"
-                                        />
-                                    </div>
-                                )}
-                                <button
-                                    type="button"
-                                    onClick={() => deleteComponent(component.id)}
-                                    className="mt-2 text-red-600 text-sm"
-                                >
-                                    Delete Component
-                                </button>
+                {/* Main Content - Editable Preview */}
+                <main
+                    className="flex-1 overflow-auto p-8 bg-neutral-900 text-white"
+                    data-editable
+                >
+                    <div className="max-w-3xl mx-auto">
+                        {/* Cover Image */}
+                        {blog.coverImage && (
+                            <div className="mb-8">
+                                <CldImage
+                                    src={blog.coverImage}
+                                    alt="Cover image"
+                                    width={1200}
+                                    height={630}
+                                    className="rounded-lg"
+                                />
                             </div>
-                        ))}
+                        )}
+
+                        {/* Components */}
+                        <EditableBlogComponentRenderer
+                            editingComponentId={editingComponentId}
+                            setEditingComponentId={setEditingComponentId}
+                        />
+
+                        {blog.components.length === 0 && (
+                            <div className="text-center text-gray-500 p-8">
+                                Start adding components from the left sidebar
+                            </div>
+                        )}
                     </div>
+                </main>
 
-                    {/* Form Actions */}
-                    <div className="flex gap-4">
-                        <button
-                            type="submit"
-                            disabled={isSaving}
-                            className="px-6 py-2 bg-primary text-white rounded disabled:opacity-50"
-                        >
-                            {isSaving ? 'Saving...' : 'Save Blog'}
-                        </button>
-
-                        <label className="block">
-                            <span className="text-sm font-medium">Status</span>
+                {/* Right Sidebar - Settings */}
+                <aside className="w-64 border-l bg-neutral-800 p-4">
+                    <div className="space-y-4">
+                        <div>
+                            <label className="block text-sm font-medium mb-1">Status</label>
                             <select
                                 value={blog.status}
-                                onChange={(e) => useBlogStore.setState(state => {
-                                    state.blog.status = e.target.value as BlogStatus;
-                                })}
-                                className="w-full p-2 border rounded bg-gray-700"
-                                required
+                                onChange={(e) => useBlogStore.setState(s => ({
+                                    blog: { ...s.blog, status: e.target.value as BlogStatus }
+                                }))}
+                                className="w-full p-2 border rounded text-black"
                             >
                                 <option value="draft">Draft</option>
                                 <option value="private">Private</option>
                                 <option value="public">Public</option>
                             </select>
-                        </label>
-                    </div>
-                </form>
+                        </div>
 
-                {/* Debug JSON Preview */}
-                <details className="mt-12">
-                    <summary className="cursor-pointer text-sm text-gray-600">JSON Preview</summary>
-                    <pre className="mt-2 p-4 bg-gray-800 rounded text-xs overflow-x-auto">
-              {JSON.stringify(blog, null, 2)}
-            </pre>
-                </details>
-            </div>
-
-            {/* Preview Panel */}
-            {showPreview && (
-                <div className={`h-full overflow-y-auto p-6 bg-gray-800 transition-all duration-300 ${
-                    previewWidth === '33%' ? 'w-1/3' :
-                        previewWidth === '66%' ? 'w-2/3' : 'w-1/2'
-                }`}>
-                    <div className="flex justify-between items-center mb-6">
-                        <h2 className="text-xl font-bold text-white">Preview</h2>
-                        <div className="flex gap-2">
-                            <button
-                                onClick={() => setPreviewWidth('33%')}
-                                className={`p-2 rounded ${previewWidth === '33%' ? 'bg-gray-700' : 'bg-gray-800'} text-white`}
-                            >
-                                <FiChevronLeft size={20} />
-                            </button>
-                            <button
-                                onClick={() => setPreviewWidth('50%')}
-                                className={`p-2 rounded ${previewWidth === '50%' ? 'bg-gray-700' : 'bg-gray-800'} text-white`}
-                            >
-                                <FiChevronRight size={20} />
-                            </button>
+                        <div>
+                            <label className="block text-sm font-medium mb-1">Cover Image</label>
+                            <input
+                                type="url"
+                                value={blog.coverImage}
+                                onChange={(e) => useBlogStore.setState(s => ({
+                                    blog: { ...s.blog, coverImage: e.target.value }
+                                }))}
+                                placeholder="Enter image URL"
+                                className="w-full p-2 border rounded text-black"
+                            />
                         </div>
                     </div>
-
-                    <article className="prose max-w-none text-white">
-                        <h1 className="text-white">{blog.title}</h1>
-                        {blog.coverImage && (
-                            <CldImage src={blog.coverImage} alt="cover image alt" width="512" height="512" style={{ width: "auto", height: "auto" }} />
-                        )}
-                        <p className="text-lg text-gray-300">{blog.description}</p>
-                        <BlogComponentRenderer components={blog.components} />
-                    </article>
-                </div>
-            )}
+                </aside>
+            </div>
         </div>
     );
 }
