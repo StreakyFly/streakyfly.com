@@ -1,6 +1,6 @@
 import { notFound } from 'next/navigation';
 import { blogService } from '@/database/services';
-import BlogComponentRenderer from '@/components/blog/BlogComponentRenderer';
+import PublicBlogComponentRenderer from '@/components/blog/PublicBlogComponentRenderer';
 import { CldImage } from '@/components/CldWrapper';
 import { getCloudinaryImageUrl } from '@/lib/cloudinary';
 
@@ -88,7 +88,7 @@ export default async function BlogPage(props: { params: Promise<{ slug: string }
 
             {/* Blog Content Renderer */}
             {blog.components?.length > 0 ? (
-                <BlogComponentRenderer components={blog.components} />
+                <PublicBlogComponentRenderer components={blog.components} />
             ) : (
                 <div className="text-center py-12 text-muted-foreground">
                     This blog post doesn&#39;t have any content yet.
