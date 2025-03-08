@@ -95,14 +95,18 @@ export default function SocialMediaIcons() {
                  className="fixed md:hidden z-20 bottom-4 right-4 group rounded-md backdrop-blur bg-white/5 border border-white/10 hover:bg-white/15 transition duration-200 ease-in-out"
                  style={{ clipPath: 'inset(0 round 8px)' }}
             >
-                <button className={`flex flex-col items-center p-3 transition-all duration-300 ease-in-out ${
-                    isExpanded ? 'w-12 h-52' : 'w-12 h-12'
-                }`}
-                        onClick={() => setIsExpanded(!isExpanded)}
+                <button
+                    className={`flex flex-col items-center p-3 transition-all duration-300 ease-in-out ${
+                        isExpanded ? 'w-12 h-52' : 'w-12 h-12'
+                    }`}
+                    onClick={() => setIsExpanded(!isExpanded)}
+                    aria-label={isExpanded ? 'Close social media menu' : 'Open social media menu'}
                 >
                     <IconToggle isToggled={isExpanded}
-                                icon1Src="/icons/network-wired.svg" icon1Alt="Social media"
-                                icon2Src="/icons/arrow-down.svg" icon2Alt="Close"
+                                icon1Src="/icons/network-wired.svg"
+                                icon1Alt="Social media"
+                                icon2Src="/icons/arrow-down.svg"
+                                icon2Alt="Close"
                                 iconSize={24}
                                 transitionDuration={300}
                     />

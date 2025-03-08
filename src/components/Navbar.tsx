@@ -160,6 +160,7 @@ export default function Navbar() {
                     ref={buttonRef}
                     className="flex items-center rounded-md border border-white/10 bg-white/5 px-3 py-3 backdrop-blur transition duration-200 ease-in-out hover:bg-white/15"
                     onClick={() => setIsMenuOpen(!isMenuOpen)}
+                    aria-label={isMenuOpen ? 'Close menu' : 'Open menu'}
                 >
                     <div className="relative flex h-5 w-6 cursor-pointer flex-col items-center justify-between">
                         <span className="block h-1 w-full rounded bg-white"></span>
