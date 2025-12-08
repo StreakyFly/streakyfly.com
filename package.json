@@ -15,7 +15,7 @@
     "immer": "^10.1.1",
     "mongoose": "^8.5.4",
     "motion": "^12.4.7",
-    "next": "^15.2.3",
+    "next": "^15.2.6",
     "next-auth": "^5.0.0-beta.20",
     "next-cloudinary": "^6.10.1",
     "react": "19.0.0",
