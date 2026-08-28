@@ -5,6 +5,9 @@ export const { handlers, signIn, signOut, auth } = NextAuth({
     providers: [
         Google
     ],
+    secret: process.env.AUTH_SECRET,
+    // Trust hosting forwarding headers on modern Vercel architecture
+    trustHost: true,
     callbacks: {
         async authorized({ auth }) {
             // Logged-in users are authenticated, otherwise redirect to login page
@@ -19,4 +22,4 @@ export const { handlers, signIn, signOut, auth } = NextAuth({
             }
         },
     },
-})
+});
